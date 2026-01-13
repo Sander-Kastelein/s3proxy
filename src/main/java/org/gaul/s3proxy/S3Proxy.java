@@ -83,7 +83,6 @@ public final class S3Proxy {
                 "Must provide both identity and credential");
 
         var pool = new QueuedThreadPool(builder.jettyMaxThreads);
-        pool.setIdleTimeout(builder.jettyIdleTimeout);
         pool.setName("S3Proxy-Jetty");
         server = new Server(pool);
 
@@ -107,6 +106,7 @@ public final class S3Proxy {
             connector = new ServerConnector(server, httpConnectionFactory);
             connector.setHost(builder.endpoint.getHost());
             connector.setPort(builder.endpoint.getPort());
+            connector.setIdleTimeout(builder.jettyIdleTimeout);
             server.addConnector(connector);
             listenHTTP = true;
         } else {
@@ -126,6 +126,7 @@ public final class S3Proxy {
                     httpConnectionFactory);
             connector.setHost(builder.secureEndpoint.getHost());
             connector.setPort(builder.secureEndpoint.getPort());
+            connector.setIdleTimeout(builder.jettyIdleTimeout);
             server.addConnector(connector);
             listenHTTPS = true;
         } else {
